@@ -1,0 +1,19 @@
+{
+  "name": "foodcatalog-api",
+  "version": "0.0.0",
+  "description": "Food Catalog API",
+  "private": true,
+  "scripts": {
+    "serve": "nodemon ./bin/www",
+    "start": "set DEBUG=foodcatalog-api:* & npm run serve"
+  },
+  "author": "Luis Mendoza <luismendoza.dev@gmail.com>",
+  "dependencies": {
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "mysql": "^2.16.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
+}
