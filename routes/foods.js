@@ -8,26 +8,32 @@ router.get('/', async (req, res, next) => {
     const foods = await pool.query(queries.foods())
 
     if (foods) {
-      let foodsListing = []
+      let foodsList = []
 
       foods.forEach(async (food, key) => {
-        const foodString = JSON.stringify(food)
-        let foodJSON = JSON.parse(foodString)
+        const foodJSON = JSON.parse(JSON.stringify(food))
+
         try {
-          foodsListing.push(foodJSON)
+          const foodTags = await pool.query(queries.tags(food.id))
+
+          if (foodTags) {
+            let tags = []
+            foodTags.forEach(tag => tags.push(tag.tag))
+            foodJSON.tags = tags
+          }
+
+          foodsList.push(foodJSON)
         } catch (err) {
           throw new Error (err)
         }
 
         if (Object.is(foods.length - 1, key)) {
-          res.json({
-            "status": 200,
-            "error": null,
-            "response": foodsListing
+          res.status(200).json({
+            "records": foods.length,
+            "response": foodsList
           })
         }
       })
-
     }
   } catch (err) {
     throw new Error(err)
