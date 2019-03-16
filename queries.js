@@ -1,5 +1,5 @@
 const queries = {
-  foods: () => `
+  foods: (query = '') => `
     SELECT
       f.id, b.brand_name, f.food_name, f.quantity, f.measure, f.portion, f.unit, f.kcal, f.protein, f.carbs, f.fat, f.saturated_fat, f.trans_fat, f.mono_fat, f.poly_fat, f.sugar, f.fiber, f.sodium, f.vitamin_b12
     FROM
@@ -8,6 +8,8 @@ const queries = {
       brands b
     ON
       f.brand_id = b.id
+    WHERE
+      f.food_name like '%${query}%'
     ORDER BY
       food_name ASC
   `,
