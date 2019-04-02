@@ -11,7 +11,7 @@ const queries = {
     WHERE
       f.food_name like '%${query}%'
     ORDER BY
-      food_name ASC
+      f.food_name ASC
   `,
   tags: (foodId) => `
     SELECT
