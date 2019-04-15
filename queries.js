@@ -13,6 +13,33 @@ const queries = {
     ORDER BY
       f.food_name ASC
   `,
+  brands: () => `
+    SELECT
+      *
+    FROM
+      brands
+    ORDER BY
+      brand_name
+  `,
+  foodsByBrand: (brandId) => {
+    let condition = ''
+    if (brandId) condition = `AND f.brand_id = ${brandId}`
+    let query = `
+      SELECT
+        *
+      FROM
+        foods f
+      LEFT JOIN
+        brands b
+      ON
+        f.brand_id = b.id
+      WHERE 1
+        ${condition}
+      ORDER BY
+        f.food_name ASC
+    `
+    return query
+  },
   tags: (foodId) => `
     SELECT
       t.tag
