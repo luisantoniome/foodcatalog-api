@@ -1,6 +1,7 @@
 const express = require('express')
 
 const foodsRouter = require('./routes/foods')
+const tagsRouter = require('./routes/tags')
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/api/v1/foods', foodsRouter);
+app.use('/api/v1/tags', tagsRouter);
 
 // error handler
 app.use(function(err, req, res, next) {

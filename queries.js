@@ -21,12 +21,20 @@ const queries = {
     ORDER BY
       brand_name
   `,
-  foodsByBrand: (brandId) => {
+  tags: () => `
+    SELECT
+      *
+    FROM
+      tags
+    ORDER BY
+      tag
+  `,
+  filter: (brand) => {
     let condition = ''
-    if (brandId) condition = `AND f.brand_id = ${brandId}`
+    if (brand > 0) condition = `AND f.brand_id = ${brand}`
     let query = `
       SELECT
-        *
+        f.id, b.brand_name, f.food_name, f.quantity, f.measure, f.portion, f.unit, f.kcal, f.protein, f.carbs, f.fat, f.saturated_fat, f.trans_fat, f.mono_fat, f.poly_fat, f.sugar, f.fiber, f.sodium, f.vitamin_b12
       FROM
         foods f
       LEFT JOIN
@@ -40,22 +48,28 @@ const queries = {
     `
     return query
   },
-  tags: (foodId) => `
-    SELECT
-      t.tag
-    FROM
-      foods_tags ft
-    INNER JOIN
-      foods f
-    ON
-      ft.food_id = f.id
-    INNER JOIN
-      tags t
-    ON
-      ft.tag_id = t.id
-    WHERE
-      ft.food_id = ${foodId}
+  foodTags: (foodId, tagId) => {
+    let condition = ''
+    condition += `AND ft.food_id = ${foodId}`
+    if (tagId) condition += ` AND ft.tag_id = ${tagId}`
+    let query = `
+      SELECT
+        t.tag
+      FROM
+        foods_tags ft
+      INNER JOIN
+        foods f
+      ON
+        ft.food_id = f.id
+      INNER JOIN
+        tags t
+      ON
+        ft.tag_id = t.id
+      WHERE 1
+        ${condition}
     `
+    return query
+  }
 }
 
 module.exports = queries

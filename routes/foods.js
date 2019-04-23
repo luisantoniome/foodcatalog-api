@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const pool = require('../database')
 const queries = require('../queries')
+const functions = require('../functions')
 
 router.get('/', async (req, res, next) => {
   try {
@@ -13,7 +14,7 @@ router.get('/', async (req, res, next) => {
         const foodJSON = JSON.parse(JSON.stringify(food))
 
         try {
-          const foodTags = await pool.query(queries.tags(food.id))
+          const foodTags = await pool.query(queries.foodTags(food.id))
 
           if (foodTags) {
             let tags = []
@@ -54,7 +55,7 @@ router.get('/search', async (req, res, next) => {
         const foodJSON = JSON.parse(JSON.stringify(food))
 
         try {
-          const foodTags = await pool.query(queries.tags(food.id))
+          const foodTags = await pool.query(queries.foodTags(food.id))
 
           if (foodTags) {
             let tags = []
@@ -85,25 +86,30 @@ router.get('/search', async (req, res, next) => {
   }
 })
 
-router.get('/search-by-brand', async (req, res, next) => {
+router.get('/filter', async (req, res, next) => {
   try {
     let foodsList = []
-    const foods = await pool.query(queries.foodsByBrand(req.query.brandId))
+
+    const foods = await pool.query(queries.filter(req.query.brand))
 
     if (foods.length) {
       foods.forEach(async (food, key) => {
         const foodJSON = JSON.parse(JSON.stringify(food))
-
+        
         try {
-          const foodTags = await pool.query(queries.tags(food.id))
+          let tagsMatched = true
 
-          if (foodTags) {
-            let tags = []
-            foodTags.forEach(tag => tags.push(tag.tag))
-            foodJSON.tags = tags
+          if (req.query.tags) {
+            await functions.asyncForEach(req.query.tags, async tag => {
+              const foodTags = await pool.query(queries.foodTags(food.id, tag))
+
+              if (!foodTags.length) tagsMatched = false
+            })
           }
 
-          foodsList.push(foodJSON)
+          if (tagsMatched) {
+            foodsList.push(foodJSON)
+          }
         } catch (err) {
           throw new Error (err)
         }
