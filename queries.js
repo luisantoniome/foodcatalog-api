@@ -1,7 +1,7 @@
 const queries = {
   foods: (query = '') => `
     SELECT
-      f.id, b.brand_name, f.food_name, f.quantity, f.measure, f.portion, f.unit, f.kcal, f.protein, f.carbs, f.fat, f.saturated_fat, f.trans_fat, f.mono_fat, f.poly_fat, f.sugar, f.fiber, f.sodium, f.vitamin_b12
+      f.id, b.brand_name, f.food_name, f.quantity, f.measure, f.portion, f.unit, f.kcal, f.protein, f.carbs, f.fat, f.saturated_fat, f.trans_fat, f.mono_fat, f.poly_fat, f.sugar, f.fiber, f.sodium, f.cholesterol, f.vitamin_b12
     FROM
       foods f
     LEFT JOIN
@@ -11,7 +11,7 @@ const queries = {
     WHERE
       f.food_name like '%${query}%'
     ORDER BY
-      f.food_name ASC
+      b.brand_name ASC
   `,
   brands: () => `
     SELECT
@@ -34,7 +34,7 @@ const queries = {
     if (brand > 0) condition = `AND f.brand_id = ${brand}`
     let query = `
       SELECT
-        f.id, b.brand_name, f.food_name, f.quantity, f.measure, f.portion, f.unit, f.kcal, f.protein, f.carbs, f.fat, f.saturated_fat, f.trans_fat, f.mono_fat, f.poly_fat, f.sugar, f.fiber, f.sodium, f.vitamin_b12
+        f.id, b.brand_name, f.food_name, f.quantity, f.measure, f.portion, f.unit, f.kcal, f.protein, f.carbs, f.fat, f.saturated_fat, f.trans_fat, f.mono_fat, f.poly_fat, f.sugar, f.fiber, f.sodium, f.cholesterol, f.vitamin_b12
       FROM
         foods f
       LEFT JOIN
