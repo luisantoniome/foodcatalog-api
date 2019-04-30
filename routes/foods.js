@@ -98,16 +98,20 @@ router.get('/filter', async (req, res, next) => {
         
         try {
           let tagsMatched = true
+          let foodTags = []
 
           if (req.query.tags) {
             await functions.asyncForEach(req.query.tags, async tag => {
-              const foodTags = await pool.query(queries.foodTags(food.id, tag))
+              foodTags = await pool.query(queries.foodTags(food.id, tag))
 
               if (!foodTags.length) tagsMatched = false
             })
           }
 
           if (tagsMatched) {
+            let tags = []
+            foodTags.forEach(tag => tags.push(tag.tag))
+            foodJSON.tags = tags
             foodsList.push(foodJSON)
           }
         } catch (err) {
