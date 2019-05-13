@@ -31,6 +31,7 @@ const queries = {
   `,
   filter: (brand) => {
     let condition = ''
+    if (brand == 0) condition = `AND f.brand_id IS NULL`
     if (brand > 0) condition = `AND f.brand_id = ${brand}`
     let query = `
       SELECT
