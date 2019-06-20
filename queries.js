@@ -70,7 +70,33 @@ const queries = {
         ${condition}
     `
     return query
-  }
+  },
+  plans: () => `
+    SELECT
+      *
+    FROM
+      plans
+  `,
+  planMeals: planId => `
+    SELECT
+      *
+    FROM
+      plans_meals
+    WHERE
+      plan_id = ${planId}
+  `,
+  mealFoods: mealId => `
+    SELECT
+      f.food_name, f.brand_id, mf.food_quantity, f.measure, f.portion, f.unit, f.kcal, f.protein, f.carbs, f.fat, f.saturated_fat, f.trans_fat, f.mono_fat, f.poly_fat, f.sugar, f.fiber, f.sodium, f.cholesterol, f.vitamin_b12, f.dairy
+    FROM
+      meals_foods mf
+    LEFT JOIN
+      foods f
+    ON
+      mf.food_id = f.id
+    WHERE
+      mf.meal_id = ${mealId}
+  `,
 }
 
 module.exports = queries
